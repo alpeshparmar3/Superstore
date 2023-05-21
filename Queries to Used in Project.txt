@@ -1,0 +1,835 @@
+Queries Used in Project
+
+
+
+1SPD****Sales figures over 12 months n 2019
+
+
+SELECT 
+	TO_CHAR(DATE_TRUNC('month', order_date), 'YYYY-MM') AS month, 
+	SUM(sales) as sales
+FROM orders 
+WHERE DATE_PART('year', order_date) = 2019 
+GROUP BY 1 
+ORDER BY 1; 
+
+
+Result: Gradual increase in sales throughout year
+Findings:
+
+|
+|
+|
+V
+
+SLICE
+
+|
+|
+|
+V
+
+
+2SPD****Sales Vs Product Category 2019
+
+
+SELECT 
+	TO_CHAR(DATE_TRUNC('month', order_date), 'YYYY-MM') AS month, 
+	SUM(sales) as sales, pro.category
+FROM orders o
+LEFT JOIN products pro
+	ON o.product_id = pro.product_id
+WHERE DATE_PART('year', order_date) = 2019 
+GROUP BY 1, 3
+ORDER BY 1; 
+
+
+
+Result: sales split for example furniture, office supplies and technology. Order it by catergory?
+Findings: November is the best selling month
+
+In Excel: Chart comes out in date order. Does it matter orn not if I put a key for eeach category? 
+or is there a better way of showing it?
+
+
+
+
+
+|
+|
+|
+V
+
+SLICE
+
+|
+|
+|
+|
+V
+
+3SPD***Sales Vs Sub-Category for November
+
+
+SELECT 
+	SUM(sales) as sales, pro.sub_category
+FROM orders o
+LEFT JOIN products pro
+	ON o.product_id = pro.product_id
+WHERE order_date BETWEEN '2019-11-01' AND '2019-11-30'
+GROUP BY 2
+ORDER BY 1 DESC; 
+
+
+Output: Sales figures by sub categories in November 2019. The month with the most sales.
+Findings: Copiers, phones an CHairs are the highest selling
+
+|
+|
+|
+|
+V
+
+SLICE
+
+|
+|
+|
+V
+
+4SPD****Which items in particulars sold alot in Nov- Top 10
+
+
+SELECT 
+	SUM(sales) as sales, pro.sub_category, product_name
+FROM orders o
+LEFT JOIN products pro
+	ON o.product_id = pro.product_id
+WHERE order_date BETWEEN '2019-11-01' AND '2019-11-30'
+GROUP BY 2, 3
+ORDER BY 1 DESC
+LIMIT 10; 
+
+Output: Top 10 of that November 2019 month
+Findings: Canon imageCLASS 2200 Advanced Copier
+Canono Copier is beining in double thte amount of of sales revenue that item number 3 in the Top 10 list.
+
+
+
+
+|
+|
+V
+
+CANT-----Sales of the top 10 throughout the year 2019
+
+
+
+|
+|
+V
+
+
+
+CANT------Top 10 Products throughout the Year Comparison to 2018?
+
+XXXXXXaverage sales per product sales throughout the year
+
+
+
+
+5SPD****Top 10 in product sales thoughout the 5 years
+
+SELECT 
+	SUM(sales) as sales, pro.sub_category, product_name
+FROM orders o
+LEFT JOIN products pro
+	ON o.product_id = pro.product_id
+GROUP BY 2, 3
+ORDER BY 1 DESC
+LIMIT 10; 
+
+
+Output:top 10 list of top selling items in terms of sale revewnue
+Findings: Different - Apple smart phon most poupualr product, the cannon copier
+
+
+
+6SPD******Sum of Monthly Sales
+
+
+SELECT DATE_TRUNC('month',order_date) as order_month, SUM(sales) AS monthly_sales
+FROM orders
+GROUP BY 1;
+
+Output: Sales from every month
+
+
+
+7SPD******Average Monthly Sales
+
+
+SELECT DATE_PART('year',order_month) AS year, AVG(monthly_sales) AS avg_monthly_sales
+FROM (SELECT DATE_TRUNC('month',order_date) as order_month, SUM(sales) AS monthly_sales
+FROM orders
+dGROUP BY 1) AS temp
+GROUP BY 1 
+ORDER BY 1 ASC;
+
+Average motnhly sales figures per year
+
+
+8SPD*****Sales VS Sub Category 2019
+
+SELECT 
+	SUM(sales) as sales, pro.sub_category
+FROM orders o
+LEFT JOIN products pro
+	ON o.product_id = pro.product_id
+WHERE DATE_PART('year', order_date) = 2019 
+GROUP BY 2
+ORDER BY 1 DESC; 
+
+
+PHones m most sales 
+
+
+9SPD*****Sales VS Sub Category 2018
+
+SELECT 
+	SUM(sales) as sales, pro.sub_category
+FROM orders o
+LEFT JOIN products pro
+	ON o.product_id = pro.product_id
+WHERE DATE_PART('year', order_date) = 2018 
+GROUP BY 2
+ORDER BY 1 DESC; 
+
+
+
+FOR EXCEL NOTES
+
+
+EXXX---Sum of Sales 2018 SQL Script
+
+SELECT 
+	SUM(sales) as sales
+FROM orders o
+WHERE DATE_PART('year', order_date) = 2018; 
+
+
+
+EXXX---Sum of Sales 2019 SQL Script
+
+
+SELECT 
+	SUM(sales) as sales
+FROM orders o
+WHERE DATE_PART('year', order_date) = 2019; 
+
+
+
+
+
+
+
+
+
+
+
+
+PP1D*******Profit figures Over 12 month of 2019
+
+
+SELECT 
+	TO_CHAR(DATE_TRUNC('month', order_date), 'YYYY-MM') AS month, 
+	SUM(sales) as sales
+FROM orders 
+WHERE DATE_PART('year', order_date) = 2019 
+GROUP BY 1 
+ORDER BY 1; 
+
+
+Result: Gradual increase in profit throughout year
+Findings:Sept highest, novvember 2nd highest, october 3rd highest
+Question: whats giving high profit in September?
+
+
+
+
+PP2D*****Sum of Monthly Profit
+
+
+
+SELECT TO_CHAR(DATE_TRUNC('month', order_date), 'YYYY-MM') as order_month, SUM(profit) AS monthly_profit
+FROM orders
+GROUP BY 1;
+
+
+
+
+
+PP3D*****Profit Per Catgroy Per Month
+
+SELECT 
+	TO_CHAR(DATE_TRUNC('month', order_date), 'YYYY-MM') AS month, 
+	SUM(profit) as profit, pro.category
+FROM orders o
+LEFT JOIN products pro
+	ON o.product_id = pro.product_id
+WHERE DATE_PART('year', order_date) = 2019 
+GROUP BY 1, 3
+ORDER BY 1; 
+
+FIndings: Office supplies and Technolgoy profit figures partuclsary high in November
+
+WHich Item(s) are giving high profit in  November
+
+
+
+PP4D****Top 10 profitable Items per month 2019
+
+
+SELECT 
+	SUM(profit) as profit, pro.product_name
+FROM orders o
+LEFT JOIN products pro
+	ON o.product_id = pro.product_id
+WHERE DATE_PART('year', order_date) = 2019 
+GROUP BY 2
+ORDER BY 1 DESC
+LIMIT 10; 
+
+Findings:
+
+Output: Top 10 most profitable items in 2019
+
+
+
+PP5D****Top 10 profitable Items per month 2018
+
+
+SELECT 
+	SUM(profit) as profit, pro.product_name
+FROM orders o
+LEFT JOIN products pro
+	ON o.product_id = pro.product_id
+WHERE DATE_PART('year', order_date) = 2018 
+GROUP BY 2
+ORDER BY 1 DESC
+LIMIT 10; 
+
+
+Canon copier still most porfitable. apple phones not profitable
+
+PPP6D----Profit Per Sub Category per month???
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SSEG1*****Sales Vs Customer Segment 2019
+
+SELECT 
+	TO_CHAR(DATE_TRUNC('month', order_date), 'YYYY-MM') AS month, 
+	SUM(sales) as sales, c.segment
+FROM orders o
+LEFT JOIN customers c
+	ON o.customer_id = c.customer_id
+WHERE DATE_PART('year', order_date) = 2019 
+GROUP BY 1, 3
+ORDER BY 1; 
+
+Output: most sales per segmint in a year per month
+Findings: Consumer segment shows the most sales in November 2019
+
+
+
+
+
+SSEG2*****Sales Vs Customer Segment 2018
+
+SELECT 
+	TO_CHAR(DATE_TRUNC('month', order_date), 'YYYY-MM') AS month, 
+	SUM(sales) as sales, c.segment
+FROM orders o
+LEFT JOIN customers c
+	ON o.customer_id = c.customer_id
+WHERE DATE_PART('year', order_date) = 2018 
+GROUP BY 1, 3
+ORDER BY 1; 
+
+
+
+
+
+
+
+
+
+PPEG1******Profit Vs Customer Segment 2019
+
+
+SELECT 
+	TO_CHAR(DATE_TRUNC('month', order_date), 'YYYY-MM') AS month, 
+	SUM(profit) as profit, c.segment
+FROM orders o
+LEFT JOIN customers c
+	ON o.customer_id = c.customer_id
+WHERE DATE_PART('year', order_date) = 2019 
+GROUP BY 1, 3
+ORDER BY 1; 
+
+
+
+
+
+
+
+
+
+PPEG2******Profit Vs Customer Segment 2018
+
+
+SELECT 
+	TO_CHAR(DATE_TRUNC('month', order_date), 'YYYY-MM') AS month, 
+	SUM(profit) as profit, c.segment
+FROM orders o
+LEFT JOIN customers c
+	ON o.customer_id = c.customer_id
+WHERE DATE_PART('year', order_date) = 2018 
+GROUP BY 1, 3
+ORDER BY 1; 
+
+
+
+Top 10 Countries for Sales
+
+SELECT 
+	SUM(sales) as sales, r.country
+FROM orders o
+LEFT JOIN regions r
+	ON o.region_id = r.region_id
+WHERE DATE_PART('year', order_date) = 2019 
+GROUP BY 2
+ORDER BY 1 DESC
+LIMIT 10; 
+
+
+
+
+
+
+
+
+
+
+R1D*******Return Reason Count - Whole Dataset
+
+
+
+
+
+SELECT 
+	reason_returned,
+	COUNT(DISTINCT order_id) as return_reason_count
+FROM returns
+GROUP BY 1
+ORDER BY 2 DESC;
+
+
+
+
+R1SEGD*****Return Reason Count By Customer Segment - Whole Dataset
+
+
+SELECT 
+	 c.segment, COUNT(DISTINCT o.order_id) as return_reason_count, reason_returned
+FROM orders o
+INNER JOIN customers c
+	ON o.customer_id = c.customer_id
+INNER JOIN returns r
+	ON o.order_id = r.order_id
+GROUP BY 1, 3
+ORDER BY 1; 
+
+
+Problem: there are large amounts of nulls in the each reason in left join. do you oconsider it and show left join results instead?
+
+
+
+
+
+
+RegionD*****Regions with most returned items? For what reasons? americas and EMEA
+
+SELECT 
+	reg.region, 
+	ret.reason_returned, 
+	COUNT(*) as returns_count
+FROM regions reg
+JOIN orders ord ON reg.region_id = ord.region_id
+JOIN returns ret ON ret.order_id = ord.order_id 
+GROUP BY 1,2
+ORDER BY 3 DESC
+
+
+
+RegionD****Return Reason Vs Product Category
+----Return Reason Count By Product Segment - Attempt - Whole Dataset---
+
+
+SELECT 
+	 p.category, COUNT(DISTINCT o.order_id) as return_reason_count, reason_returned
+FROM orders o
+INNER JOIN products p
+	ON o.product_id = p.product_id
+INNER JOIN returns r
+	ON o.order_id = r.order_id
+GROUP BY 1, 3
+ORDER BY 1; 
+
+
+
+
+
+NOTUSEFUL----Most returned items---
+
+
+SELECT 
+	prd.category, 
+	prd.product_name, 
+	COUNT(*) as returns_count
+FROM products prd
+JOIN orders ord ON prd.product_id = ord.product_id
+JOIN returns ret ON ret.order_id = ord.order_id 
+GROUP BY 1,2
+ORDER BY 3 DESC
+; 
+
+
+
+
+
+
+
+
+5PPD****Top 10 Items - Profit - thoughout the 5 years
+
+SELECT 
+	SUM(profit) as profit, pro.sub_category, product_name
+FROM orders o
+LEFT JOIN products pro
+	ON o.product_id = pro.product_id
+GROUP BY 2, 3
+ORDER BY 1 DESC
+LIMIT 10; 
+
+
+Output:top 10 list of top profitable items
+Findings: Different - The Canon Copier most profitable. Apple Phone not even in top 10
+
+
+
+
+
+
+SP8D******----quarterly SALES of each product category----
+
+SELECT 
+	TO_CHAR(DATE_TRUNC('quarter', order_date), 'YYYY-MM') AS quarter, 
+	SUM(sales) as sales, pro.category
+FROM orders o
+LEFT JOIN products pro
+	ON o.product_id = pro.product_id
+GROUP BY 1, 3
+ORDER BY 1; 
+
+
+PP11******Total Product Category Profit Chart
+
+SELECT 
+	SUM(profit) as profit, pro.category
+FROM orders o
+LEFT JOIN products pro
+	ON o.product_id = pro.product_id
+GROUP BY 2
+ORDER BY 1 DESC; 
+
+
+
+
+SP11******Total Product Category Sales Chart
+
+
+SELECT 
+	SUM(sales) as sales, pro.category
+FROM orders o
+LEFT JOIN products pro
+	ON o.product_id = pro.product_id
+GROUP BY 2
+ORDER BY 1 DESC; 
+
+
+
+SP12******Total Sub Category Sales Chart
+
+
+SELECT 
+	SUM(sales) as sales, pro.sub_category
+FROM orders o
+LEFT JOIN products pro
+	ON o.product_id = pro.product_id
+GROUP BY 2
+ORDER BY 1 DESC; 
+
+
+
+PP12*****Profit per Sub Category----
+
+
+
+SELECT 
+	SUM(profit) as profit, pro.sub_category
+FROM orders o
+LEFT JOIN products pro
+	ON o.product_id = pro.product_id
+GROUP BY 2, 3
+ORDER BY 1 DESC; 
+
+
+
+------SSEG3*****Quarterly Sales Vs Customer Segment------
+
+SELECT 
+	TO_CHAR(DATE_TRUNC('quarter', order_date), 'YYYY-MM') AS quarter, 
+	SUM(sales) as sales, c.segment
+FROM orders o
+LEFT JOIN customers c
+	ON o.customer_id = c.customer_id
+GROUP BY 1, 3
+ORDER BY 1; 
+
+
+
+------PSEG3*****Quarterly Profit Vs Customer Segment------
+
+SELECT 
+	TO_CHAR(DATE_TRUNC('quarter', order_date), 'YYYY-MM') AS quarter, 
+	SUM(profit) as profit, c.segment
+FROM orders o
+LEFT JOIN customers c
+	ON o.customer_id = c.customer_id
+GROUP BY 1, 3
+ORDER BY 1; 
+
+
+
+OP1**** Best Performing Product Segemnts (COunt of Instances Ordered)
+
+SELECT COUNT (order_id) as orders, pro.category
+FROM orders o
+LEFT JOIN products pro
+	ON o.product_id = pro.product_id
+GROUP BY 2
+ORDER BY 1 DESC; 
+
+
+FOR WORKBOOK*****COUNT DISTINCT ORDERS
+
+
+SELECT COUNT (order_id), COUNT (DISTINCT order_id)
+FROM orders
+;
+
+
+
+CHECK********Check for duplicates: Count(*) and Count Distinct check
+
+SELECT pro.category,
+	COUNT(*), COUNT(DISTINCT o.product_id)
+FROM orders o
+LEFT JOIN products pro
+	ON o.product_id = pro.product_id
+GROUP BY 1
+ORDER BY 1 DESC
+;
+
+
+
+
+
+
+
+
+OP2******Orders by subcategory---Best Performing Product Subcategories (Count of Requests) ---
+
+
+SELECT pro.sub_category,
+	COUNT(*)
+FROM orders o
+LEFT JOIN products pro
+	ON o.product_id = pro.product_id
+GROUP BY 1
+ORDER BY 2 DESC
+;
+
+
+
+
+
+SEGD*****----category segment and sales & profit comparison----
+
+
+SELECT  
+	pro.category, c.segment, SUM(sales) as sales, SUM(profit) as profit
+FROM orders o
+LEFT JOIN customers c
+	ON o.customer_id = c.customer_id
+LEFT JOIN products pro
+	ON o.product_id = pro.product_id	
+GROUP BY 1, 2
+ORDER BY 1; 
+
+
+----PP14***Profit Vs Sub-Category for Technology in November----
+
+
+SELECT 
+	SUM(profit) as profit, pro.sub_category
+FROM orders o
+LEFT JOIN products pro
+	ON o.product_id = pro.product_id
+WHERE order_date BETWEEN '2019-11-01' AND '2019-11-30'
+AND pro.category = 'Technology'
+GROUP BY 2
+ORDER BY 1 DESC; 
+
+
+
+
+
+SSEG12----category segment and sales----
+
+
+SELECT  
+	pro.category, c.segment, SUM(sales) as sales
+FROM orders o
+LEFT JOIN customers c
+	ON o.customer_id = c.customer_id
+LEFT JOIN products pro
+	ON o.product_id = pro.product_id	
+GROUP BY 1, 2
+ORDER BY 1; 
+
+
+
+
+
+
+
+
+
+
+SSEG25----Top 25 Most Profitable----
+
+
+SELECT  
+	 c.segment, r.country, SUM(sales) as sales
+FROM orders o
+LEFT JOIN customers c
+	ON o.customer_id = c.customer_id	
+LEFT JOIN regions r
+	ON o.region_id = r.region_id
+GROUP BY 1, 2
+ORDER BY 3 DESC
+LIMIT 25;
+
+
+
+WRONGReturnsDONE****Number of returns per Consumer Segment---
+
+SELECT 
+	 c.segment, reason_returned, COUNT(DISTINCT o.order_id) as return_reason_count
+FROM orders o
+INNER JOIN customers c
+	ON o.customer_id = c.customer_id
+INNER JOIN returns r
+	ON o.order_id = r.order_id
+GROUP BY 1, 2
+ORDER BY 2; 
+
+
+Returns******Return Reason Total Count
+SELECT 
+	COUNT(reason_returned)
+FROM returns 
+
+
+
+
+
+
+
+DISCOUNT---Percentage MIN, MAX, AVG---
+
+SELECT 
+	pro.category, MIN(discount), MAX (discount), AVG(discount)
+FROM orders o
+LEFT JOIN products pro
+	ON o.product_id = pro.product_id
+GROUP BY 1
+ORDER BY 2 DESC; 
+
+
+
+
+CORRECT RETURN Reason ORder Item Request COunt
+
+SELECT 
+	 reason_returned, c.segment, COUNT(o.order_id) as return_reason_count
+FROM orders o
+INNER JOIN customers c
+	ON o.customer_id = c.customer_id
+INNER JOIN returns r
+	ON o.order_id = r.order_id
+GROUP BY 1, 2
+ORDER BY 1; 
+
+
+
+
+ref - total return item requests - 51250
+SELECT 
+	 COUNT(r.order_id) as total_return_item_requests
+FROM orders o
+INNER JOIN returns r
+	ON o.order_id = r.order_id
+ORDER BY 1 ; 
+
+
+
+
+total orders by csutoemr segment 999,991
+
+SELECT cus.segment,	
+	COUNT(*) AS order_requests
+FROM orders o
+LEFT JOIN customers cus
+	ON o.customer_id = cus.customer_id
+GROUP BY 1
+ORDER BY 1;
