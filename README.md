@@ -1,1 +1,1 @@
-# Superstore
+# Superstore Dataset - Used SQL (Postgresql)
