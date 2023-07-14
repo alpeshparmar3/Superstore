@@ -1,1 +1,1 @@
-# Superstore Dataset - Used SQL (Postgresql)
+# Superstore Dataset - Analyisis Conducted Using SQL (Postgresql) and Powerpoint
